@@ -1,33 +1,53 @@
 #include "kernel.h"
 
-char *get_video_window(void) {
-    return (char*)0xB8000;
-}
 
-void clear(void) {
-    char *video = get_video_window();
-    
-    for (int i = 0; i < 80 * 25 * 2; i += 2) {
-        video[i] = ' ';
-        video[i + 1] = WHITE;
-    }
-}
 
-void print_42(void) {
-    char *video = get_video_window();
-    
-    video[0] = '4';
-    video[1] = COLORCODE(GREEN, BLACK);
-    video[2] = '2';
-    video[3] = COLORCODE(GREEN, BLACK);
+void    init_kernel(t_kernel *kernel) {
+    //Init kernel structure
+    kernel->display = (char*)0xB8000;
+    kernel->d_idx = 0;
+    kernel->cmd_line = NULL;
+    kernel->history = NULL;
+
+    disable_default_cursor();
+    clear_display(kernel);
+    //init_idt();
+    //init_keyboard();
 }
 
 
 
+void    destroy_kernel(t_kernel *kernel) {
+    //Destroy kernel structure
+    kernel->cmd_line = NULL;
+    kernel->history = NULL;
+}
 
 
-// LE NOYAU
+
+// THE KERNEL
 void main(void) {
-    clear();
-    print_42();
+    t_kernel    kernel;  
+
+    // Start kernel
+    init_kernel(&kernel);
+    
+    // Mandatory
+    display_mandatory(&kernel);
+    
+    // Bonuses
+    display_bonuses(&kernel);
+
+    while (1) {
+        display_cmd_line(&kernel);
+        display_cursor(&kernel);
+        
+        tmp_pause();
+
+        //await_input(kernel, input);
+        //execute_input(input);
+        //reset_input(kernel, input);
+    }
+
+    //destroy_kernel(&kernel);
 }

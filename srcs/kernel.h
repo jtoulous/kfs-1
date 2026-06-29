@@ -22,4 +22,30 @@
 // Macro pour créer un attribut
 #define COLORCODE(fg, bg) (((bg) << 4) | (fg))
 
+
+
+
+
+typedef struct {
+    char    *display;
+    int     d_idx;
+    char    *cmd_line;
+    char    *history;
+} t_kernel;
+
+
+
+void disable_default_cursor(void);
+
+char *get_display(void);
+void clear_display(int *);
+void display_mandatory(int *);
+void display_bonuses(int *);
+void display_new_line(int *, int);
+void display_cmd_line(int *);
+void display_cursor(int *);
+
+// for debug, to remove at the end
+void tmp_pause(void);
+
 #endif

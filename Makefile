@@ -10,7 +10,7 @@ LD_FLAGS = -m elf_i386 -T srcs/linker.ld
 
 # Fichiers sources
 ASM_SOURCES = srcs/boot.s
-C_SOURCES = srcs/kernel.c
+C_SOURCES = srcs/kernel.c srcs/utils/display.c srcs/utils/utils.c srcs/utils/input.c srcs/utils/handlers.c
 
 # Fichiers objets
 ASM_OBJECTS = $(ASM_SOURCES:.s=.o)
