@@ -10,8 +10,9 @@ void    init_kernel(t_kernel *kernel) {
 
     kernel->cmd_line = NULL;
     kernel->history = NULL;
-
-    disable_default_cursor();
+    
+    enable_cursor_blink();
+    //disable_default_cursor();
     clear_display(kernel);
     //init_idt();
     //init_keyboard();
@@ -41,9 +42,7 @@ void main(void) {
     display_bonuses(&kernel);
 
     while (1) {
-        display_cmd_line(&kernel);
-        display_cursor(&kernel);
-        
+        display_cmd_line(&kernel);    
         tmp_pause();
 
         //await_input(kernel, input);

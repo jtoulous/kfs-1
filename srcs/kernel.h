@@ -34,8 +34,8 @@ typedef struct {
 } t_kernel;
 
 
-
-void disable_default_cursor(void);
+void enable_cursor_blink(void);
+void move_cursor(int position);
 
 char *get_display(void);
 void clear_display(t_kernel *);
@@ -43,7 +43,6 @@ void display_mandatory(t_kernel *);
 void display_bonuses(t_kernel *);
 void display_new_line(t_kernel *, int);
 void display_cmd_line(t_kernel *);
-void display_cursor(t_kernel *);
 
 // for debug, to remove at the end
 void tmp_pause(void);

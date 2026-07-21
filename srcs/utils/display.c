@@ -15,6 +15,7 @@ void clear_display(t_kernel *kernel) {
         kernel->display[i + 1] = WHITE;
     }
     kernel->d_idx = 0;
+    move_cursor(0);
 }
 
 
@@ -24,6 +25,7 @@ void display_new_line(t_kernel *kernel, int nb) {
         int next_line = line + 1;
         kernel->d_idx = next_line * 160;
     }
+    move_cursor(kernel->d_idx);
 }
 
 void display_char_n_color(t_kernel *kernel, char c, char color) {
@@ -31,6 +33,7 @@ void display_char_n_color(t_kernel *kernel, char c, char color) {
         kernel->display[kernel->d_idx] = c;
         kernel->display[kernel->d_idx + 1] = COLORCODE(color, BLACK);
         kernel->d_idx += 2;
+        move_cursor(kernel->d_idx);
     }
     else if (c == '\n') {
         display_new_line(kernel, 1);
@@ -43,6 +46,7 @@ void display_char(t_kernel *kernel, char c) {
         kernel->display[kernel->d_idx] = c;
         kernel->display[kernel->d_idx + 1] = COLORCODE(kernel->d_color, BLACK);
         kernel->d_idx += 2;
+        move_cursor(kernel->d_idx);
     }
     else if (c == '\n') {
         display_new_line(kernel, 1);
@@ -53,10 +57,6 @@ void display_char(t_kernel *kernel, char c) {
 //////////////////////////////////////////////////////
 //////                  CURSOR                   /////
 
-
-void display_cursor(t_kernel *kernel) {
-    display_char(kernel, '_');
-}
 
 void display_cmd_line(t_kernel *kernel) {
     char *cmd_line = "kfs-1> ";
