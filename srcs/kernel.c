@@ -12,8 +12,8 @@ void    init_kernel(t_kernel *kernel) {
     kernel->d_idx = 0;
     kernel->d_color = GREEN;
 
-    kernel->cmd_line = NULL;
-    kernel->history = NULL;
+    kernel->cmd_line[0] = '\0';
+    kernel->cmd_len = 0;
     
     enable_cursor_blink();
     clear_display(kernel);
@@ -23,11 +23,10 @@ void    init_kernel(t_kernel *kernel) {
 
 
 
-void    destroy_kernel(t_kernel *kernel) {
-    //Destroy kernel structure
-    kernel->cmd_line = NULL;
-    kernel->history = NULL;
-}
+//void    destroy_kernel(t_kernel *kernel) {
+//    //Destroy kernel structure
+//    kernel->cmd_line = NULL;
+//}
 
 
 
@@ -49,18 +48,18 @@ void main(void) {
 
         while (1) {
             if (key_pressed == 1) {
-                char input = (char)last_key;
-                
+                char input = scan_to_ascii((unsigned char)last_key);
                 key_pressed = 0;
                 last_key = 0;
-
-                //handle_input(&kernel, input);
-                if (input == '\n')
+            
+                handle_input(&kernel, input);
+                if (input == '\n') {
+                    // execute_command(kernel->cmd_line)
+                    // reset buffer
                     break;
+                }
             }
         }
-        //execute_input(input);
-        //reset_input(kernel, input);
     }
 
     //destroy_kernel(&kernel);

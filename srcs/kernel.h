@@ -30,8 +30,8 @@ typedef struct {
     int     d_idx;
     char    d_color;
 
-    char    *cmd_line;
-    char    *history;
+    char    cmd_line[256];
+    int     cmd_len;
 } t_kernel;
 
 
@@ -44,6 +44,12 @@ void display_mandatory(t_kernel *);
 void display_bonuses(t_kernel *);
 void display_new_line(t_kernel *, int);
 void display_cmd_line(t_kernel *);
+
+void keyboard_sig(void);
+
+unsigned char inb(unsigned short);
+char scan_to_ascii(unsigned char scan);
+void handle_input(t_kernel *kernel, char input);
 
 // for debug, to remove at the end
 void tmp_pause(void);
