@@ -22,7 +22,8 @@
 
 #define NULL ((void *)0)
 
-
+extern volatile int key_pressed;
+extern volatile int last_key;
 
 typedef struct {
     char    *display;
