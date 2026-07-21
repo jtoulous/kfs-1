@@ -2,6 +2,7 @@
 #define KERNEL_H
 
 // Couleurs
+#define COLORCODE(fg, bg) (((bg) << 4) | (fg))
 #define BLACK   0x0
 #define BLUE    0x1
 #define GREEN   0x2
@@ -19,16 +20,15 @@
 #define YELLOW  0xE
 #define WHITE   0xF
 
-// Macro pour créer un attribut
-#define COLORCODE(fg, bg) (((bg) << 4) | (fg))
-
-
+#define NULL ((void *)0)
 
 
 
 typedef struct {
     char    *display;
     int     d_idx;
+    char    d_color;
+
     char    *cmd_line;
     char    *history;
 } t_kernel;
@@ -38,12 +38,12 @@ typedef struct {
 void disable_default_cursor(void);
 
 char *get_display(void);
-void clear_display(int *);
-void display_mandatory(int *);
-void display_bonuses(int *);
-void display_new_line(int *, int);
-void display_cmd_line(int *);
-void display_cursor(int *);
+void clear_display(t_kernel *);
+void display_mandatory(t_kernel *);
+void display_bonuses(t_kernel *);
+void display_new_line(t_kernel *, int);
+void display_cmd_line(t_kernel *);
+void display_cursor(t_kernel *);
 
 // for debug, to remove at the end
 void tmp_pause(void);

@@ -6,6 +6,8 @@ void    init_kernel(t_kernel *kernel) {
     //Init kernel structure
     kernel->display = (char*)0xB8000;
     kernel->d_idx = 0;
+    kernel->d_color = GREEN;
+
     kernel->cmd_line = NULL;
     kernel->history = NULL;
 
