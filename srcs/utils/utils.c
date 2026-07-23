@@ -18,9 +18,9 @@ void outb(unsigned short port, unsigned char val) {
 
 void enable_cursor_blink(void) {
     outb(0x3D4, 0x0A);
-    outb(0x3D5, 0x0E);   // start scanline = 14
+    outb(0x3D5, 0x0E);
     outb(0x3D4, 0x0B);
-    outb(0x3D5, 0x0F);   // end scanline = 15
+    outb(0x3D5, 0x0F);
 }
 
 
@@ -32,6 +32,7 @@ void move_cursor(int position) {
     outb(0x3D4, 0x0E);
     outb(0x3D5, (unsigned char)((pos >> 8) & 0xFF));
 }
+
 
 char scan_to_ascii(unsigned char scan) {
     char table[128] = {

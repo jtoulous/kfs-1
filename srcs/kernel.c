@@ -7,18 +7,19 @@ volatile int last_key = 0;
 
 
 void    init_kernel(t_kernel *kernel) {
-    //Init kernel structure
+    //Init IDT
+    init_idt(kernel);
+
+    //Init Display
     kernel->display = (char*)0xB8000;
     kernel->d_idx = 0;
     kernel->d_color = GREEN;
+    clear_display(kernel);
+    enable_cursor_blink();
 
+    //Init Command Line
     kernel->cmd_line[0] = '\0';
     kernel->cmd_len = 0;
-    
-    enable_cursor_blink();
-    clear_display(kernel);
-    //init_idt();
-    //init_keyboard();
 }
 
 
@@ -51,12 +52,14 @@ void main(void) {
                 char input = scan_to_ascii((unsigned char)last_key);
                 key_pressed = 0;
                 last_key = 0;
-            
-                handle_input(&kernel, input);
-                if (input == '\n') {
-                    // execute_command(kernel->cmd_line)
-                    // reset buffer
-                    break;
+                
+                if (input != '\0') {
+                    handle_input(&kernel, input);
+                    if (input == '\n') {
+                        // execute_command(kernel->cmd_line)
+                        // reset buffer
+                        break;
+                    }
                 }
             }
         }

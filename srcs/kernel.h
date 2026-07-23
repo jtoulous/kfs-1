@@ -22,12 +22,37 @@
 
 #define NULL ((void *)0)
 
+
+
+////////     Varz      ////////
 extern volatile int key_pressed;
 extern volatile int last_key;
 
+
+
+////////     Structs      ////////
+typedef struct {
+    unsigned short base_low;
+    unsigned short selector;
+    unsigned char zero;
+    unsigned char flags;
+    unsigned short base_high;
+} __attribute__((packed)) t_idt_cell;
+
+typedef struct {
+    t_idt_cell    cells[256];
+} __attribute__((packed)) t_idt_table;
+
+
+typedef struct {
+    unsigned short limit;
+    unsigned int base;
+} __attribute__((packed)) t_idt_ptr;
+
+
 typedef struct {
     //IDT table
-    //idt_table   idt;
+    t_idt_table   idt;
 
     //Display
     char    *display;
@@ -40,21 +65,21 @@ typedef struct {
 } t_kernel;
 
 
-typedef struct {
-    unsigned short base_low;
-    unsigned short selector;
-    unsigned char zero;
-    unsigned char flags;
-    unsigned short base_high;
-} __attribute__((packed)) idt_cell;
 
-typedef struct {
-    idt_cell    cells[256];
-} __attribute__((packed)) idt_table;
+////////     Fonctions      ////////
+unsigned char inb(unsigned short);
+void outb(unsigned short port, unsigned char val);
 
+struct interrupt_frame;
+__attribute__((interrupt))
+void keyboard_sig(struct interrupt_frame *frame);
 
 void enable_cursor_blink(void);
 void move_cursor(int position);
+char scan_to_ascii(unsigned char scan);
+
+void    init_idt(t_kernel *kernel);
+void    init_pic(void);
 
 char *get_display(void);
 void clear_display(t_kernel *);
@@ -62,14 +87,14 @@ void display_mandatory(t_kernel *);
 void display_bonuses(t_kernel *);
 void display_new_line(t_kernel *, int);
 void display_cmd_line(t_kernel *);
+void display_char(t_kernel *kernel, char c);
+void display_char_n_color(t_kernel *kernel, char c, char color);
 
-void keyboard_sig(void);
-
-unsigned char inb(unsigned short);
-char scan_to_ascii(unsigned char scan);
 void handle_input(t_kernel *kernel, char input);
+
 
 // for debug, to remove at the end
 void tmp_pause(void);
+
 
 #endif

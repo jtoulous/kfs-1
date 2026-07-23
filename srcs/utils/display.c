@@ -1,5 +1,6 @@
 #include "../kernel.h"
 
+#define VGA_SIZE (80 * 25 * 2)
 
 //////////////////////////////////////////////////////
 //////                  UTILS                    /////
@@ -10,7 +11,7 @@ char *get_display(void) {
 
 
 void clear_display(t_kernel *kernel) {
-    for (int i = 0; i < 80 * 25 * 2; i += 2) {
+    for (int i = 0; i < VGA_SIZE; i += 2) {
         kernel->display[i] = ' ';
         kernel->display[i + 1] = WHITE;
     }
@@ -25,6 +26,9 @@ void display_new_line(t_kernel *kernel, int nb) {
         int next_line = line + 1;
         kernel->d_idx = next_line * 160;
     }
+    if (kernel->d_idx >= VGA_SIZE) {
+        clear_display(kernel);
+    }
     move_cursor(kernel->d_idx);
 }
 
@@ -33,6 +37,9 @@ void display_char_n_color(t_kernel *kernel, char c, char color) {
         kernel->display[kernel->d_idx] = c;
         kernel->display[kernel->d_idx + 1] = COLORCODE(color, BLACK);
         kernel->d_idx += 2;
+        if (kernel->d_idx >= VGA_SIZE) {
+            clear_display(kernel);
+        }
         move_cursor(kernel->d_idx);
     }
     else if (c == '\n') {
@@ -46,6 +53,9 @@ void display_char(t_kernel *kernel, char c) {
         kernel->display[kernel->d_idx] = c;
         kernel->display[kernel->d_idx + 1] = COLORCODE(kernel->d_color, BLACK);
         kernel->d_idx += 2;
+        if (kernel->d_idx >= VGA_SIZE) {
+            clear_display(kernel);
+        }
         move_cursor(kernel->d_idx);
     }
     else if (c == '\n') {

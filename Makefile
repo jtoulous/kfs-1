@@ -5,12 +5,12 @@ LD = ld
 
 # Flags
 ASM_FLAGS = -f elf32
-CC_FLAGS = -m32 -ffreestanding -nostdlib -nodefaultlibs -nostartfiles -fno-builtin -fno-stack-protector
+CC_FLAGS = -m32 -ffreestanding -nostdlib -nodefaultlibs -nostartfiles -fno-builtin -fno-stack-protector -mgeneral-regs-only
 LD_FLAGS = -m elf_i386 -T srcs/linker.ld
 
 # Fichiers sources
 ASM_SOURCES = srcs/boot.s
-C_SOURCES = srcs/kernel.c srcs/utils/display.c srcs/utils/utils.c srcs/utils/input.c srcs/utils/signals.c
+C_SOURCES = srcs/kernel.c srcs/utils/display.c srcs/utils/utils.c srcs/utils/input.c srcs/utils/signals.c srcs/utils/idt.c
 
 # Fichiers objets
 ASM_OBJECTS = $(ASM_SOURCES:.s=.o)
