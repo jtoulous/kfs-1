@@ -26,13 +26,31 @@ extern volatile int key_pressed;
 extern volatile int last_key;
 
 typedef struct {
+    //IDT table
+    //idt_table   idt;
+
+    //Display
     char    *display;
     int     d_idx;
     char    d_color;
 
+    //Command Line
     char    cmd_line[256];
     int     cmd_len;
 } t_kernel;
+
+
+typedef struct {
+    unsigned short base_low;
+    unsigned short selector;
+    unsigned char zero;
+    unsigned char flags;
+    unsigned short base_high;
+} __attribute__((packed)) idt_cell;
+
+typedef struct {
+    idt_cell    cells[256];
+} __attribute__((packed)) idt_table;
 
 
 void enable_cursor_blink(void);
