@@ -1,69 +1,54 @@
 #include "kernel.h"
 
+volatile t_kernel kernel;
 
-volatile int key_pressed = 0;
-volatile int last_key = 0;
+void init_kernel(void) {
+    // Init IDT
+    init_idt();
 
-
-
-void    init_kernel(t_kernel *kernel) {
-    //Init IDT
-    init_idt(kernel);
-
-    //Init Display
-    kernel->display = (char*)0xB8000;
-    kernel->d_idx = 0;
-    kernel->d_color = GREEN;
-    clear_display(kernel);
+    // Init Display
+    kernel.display = (char*)0xB8000;
+    kernel.d_idx = 0;
+    kernel.d_color = GREEN;
+    clear_display();
     enable_cursor_blink();
 
-    //Init Command Line
-    kernel->cmd_line[0] = '\0';
-    kernel->cmd_len = 0;
+    // Init Command Line
+    kernel.cmd_line[0] = '\0';
+    kernel.cmd_len = 0;
+
+    // Init Keyboard vars
+    kernel.key_pressed = 0;
+    kernel.last_key = 0;
 }
 
 
 
-//void    destroy_kernel(t_kernel *kernel) {
-//    //Destroy kernel structure
-//    kernel->cmd_line = NULL;
-//}
-
-
-
-// THE KERNEL
 void main(void) {
-    t_kernel    kernel;  
+    init_kernel();
 
-    // Start kernel
-    init_kernel(&kernel);
-    
-    // Mandatory
-    display_mandatory(&kernel);
-    
-    // Bonuses
-    display_bonuses(&kernel);
+    display_mandatory();
+    display_bonuses();
 
     while (1) {
-        display_cmd_line(&kernel);
+        display_cmd_line();
 
         while (1) {
-            if (key_pressed == 1) {
-                char input = scan_to_ascii((unsigned char)last_key);
-                key_pressed = 0;
-                last_key = 0;
-                
+            if (kernel.key_pressed) {
+                char input = scan_to_ascii((unsigned char)kernel.last_key);
+                kernel.key_pressed = 0;
+                kernel.last_key = 0;
+
                 if (input != '\0') {
-                    handle_input(&kernel, input);
-                    if (input == '\n') {
-                        // execute_command(kernel->cmd_line)
-                        // reset buffer
+                    if (handle_input(input) == 1) {
+                        // Commande reçue
+                        // execute_command();
+                        // reset cmd_line / cmd_len
                         break;
                     }
                 }
             }
         }
+        
     }
-
-    //destroy_kernel(&kernel);
 }

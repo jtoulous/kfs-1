@@ -22,12 +22,7 @@
 
 #define NULL ((void *)0)
 
-
-
-////////     Varz      ////////
-extern volatile int key_pressed;
-extern volatile int last_key;
-
+#define CMD_MAX_SIZE 256
 
 
 ////////     Structs      ////////
@@ -43,31 +38,34 @@ typedef struct {
     t_idt_cell    cells[256];
 } __attribute__((packed)) t_idt_table;
 
-
 typedef struct {
     unsigned short limit;
     unsigned int base;
 } __attribute__((packed)) t_idt_ptr;
 
-
 typedef struct {
-    //IDT table
+    // IDT table
     t_idt_table   idt;
 
-    //Display
+    // Display
     char    *display;
     int     d_idx;
     char    d_color;
 
-    //Command Line
-    char    cmd_line[256];
+    // Command Line
+    char    cmd_line[CMD_MAX_SIZE];
     int     cmd_len;
+
+    // Keyboard
+    int     key_pressed;
+    int     last_key;
 } t_kernel;
 
-
+////////     Varz      ////////
+extern volatile t_kernel kernel;
 
 ////////     Fonctions      ////////
-unsigned char inb(unsigned short);
+unsigned char inb(unsigned short port);
 void outb(unsigned short port, unsigned char val);
 
 struct interrupt_frame;
@@ -78,23 +76,23 @@ void enable_cursor_blink(void);
 void move_cursor(int position);
 char scan_to_ascii(unsigned char scan);
 
-void    init_idt(t_kernel *kernel);
-void    init_pic(void);
+void init_idt(void);
+void init_pic(void);
 
 char *get_display(void);
-void clear_display(t_kernel *);
-void display_mandatory(t_kernel *);
-void display_bonuses(t_kernel *);
-void display_new_line(t_kernel *, int);
-void display_cmd_line(t_kernel *);
-void display_char(t_kernel *kernel, char c);
-void display_char_n_color(t_kernel *kernel, char c, char color);
+void clear_display(void);
+void display_mandatory(void);
+void display_bonuses(void);
+void display_new_line(int nb);
+void display_cmd_line(void);
+void display_char(char c);
+void display_char_n_color(char c, char color);
+void printf(char *str);
 
-void handle_input(t_kernel *kernel, char input);
+int handle_input(char input);
+void handle_backspace(void);
+void handle_regular_char(char input);
 
-
-// for debug, to remove at the end
 void tmp_pause(void);
-
 
 #endif
